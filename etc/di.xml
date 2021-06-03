@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<type name="Magento\Framework\Console\CommandList">
+		<arguments>
+			<argument name="commands" xsi:type="array">
+				<item name="SyncImport" xsi:type="object">TemplateProvider\CmsImportExport\Console\Command\Import</item>
+				<item name="ExportStaticBlock" xsi:type="object">TemplateProvider\CmsImportExport\Console\Command\ExportStaticBlock</item>
+				<item name="ExportCmsPage" xsi:type="object">TemplateProvider\CmsImportExport\Console\Command\ExportCmsPage</item>
+			</argument>
+		</arguments>
+	</type>
+	<preference for="TemplateProvider\CmsImportExport\Api\ContentInterface" type="TemplateProvider\CmsImportExport\Model\Content" />
+</config>

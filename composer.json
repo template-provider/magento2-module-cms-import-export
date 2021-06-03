@@ -1,0 +1,27 @@
+{
+    "name": "template-provider/magento2-module-cms-import-export",
+    "description": "Import and Export CMS Blocks and Pages for Magento 2",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "type": "magento2-module",
+    "authors": [
+        {
+            "email": "jan.gantzert@template-provider.com",
+            "name": "Jan Gantzert"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "ext-zip": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "TemplateProvider\\CmsImportExport\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
