@@ -43,5 +43,5 @@ interface ContentInterface
 
     public function importFromArray(array $payload, string $archivePath = null): int;
 
-    public function importFromZipFile(string $fileName, bool $rm = false): int;
+    public function importFromZipFile(string $fileName): int;
 }

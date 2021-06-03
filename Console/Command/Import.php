@@ -56,7 +56,7 @@ class Import extends Command
         if (!$input->getOption('file-name')) {
             $output->writeln('Please enter file name which you want to import.');
         } else {
-            $fileName = $this->moduleDir->getDir('TemplateProvider_CmsImportExport') . '/export/' . $input->getOption('file-name');
+            $fileName = $this->filesystem->getExportPath() . '/' . $input->getOption('file-name');
 
             if (file_exists($fileName)) {
                 $output->writeln('Import Process started...!');
@@ -69,7 +69,7 @@ class Import extends Command
                     $storesMap[$storeInterface->getCode()] = $storeInterface->getCode();
                 }
                 $this->contentInterface->setCmsMode($cmsMode)->setMediaMode($mediaMode)->setStoresMap($storesMap);
-                $count = $this->contentInterface->importFromZipFile($fileName, true);
+                $count = $this->contentInterface->importFromZipFile($fileName);
                 $output->writeln(__('A total of %1 item(s) have been imported/updated.', $count));
             } else {
                 $output->writeln("{$fileName} file does not exist");

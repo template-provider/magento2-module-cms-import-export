@@ -62,11 +62,11 @@ class ExportStaticBlock extends Command
 
         try {
             if (!empty($blocks)) {
-                $file_name = $this->importExportContentInterface->asZipFile([], $blocks);
-                $show_file_name = $this->directoryList->getPath('var') . '/' . $file_name;
+                $fileName = $this->importExportContentInterface->asZipFile([], $blocks);
+                $showFileName = $this->directoryList->getPath('var') . '/' . $fileName;
 
-                if (!empty($file_name)) {
-                    $output->writeln("Static Block successfully export at {$show_file_name}");
+                if (!empty($fileName)) {
+                    $output->writeln("Static Block successfully export at {$showFileName}");
                 } else {
                     $output->writeln('Error while export blocks.....');
                 }

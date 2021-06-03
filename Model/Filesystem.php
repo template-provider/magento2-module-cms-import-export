@@ -14,8 +14,6 @@ class Filesystem
 
     const EXTRACT_PATH = 'cms-import-export/extract';
 
-    const UPLOAD_PATH = 'cms-import-export/extract';
-
     protected \Magento\Framework\Filesystem $filesystem;
 
     protected File $file;
@@ -26,16 +24,6 @@ class Filesystem
     ) {
         $this->filesystem = $filesystem;
         $this->file = $file;
-    }
-
-    public function getUploadPath(): string
-    {
-        $varDir = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
-        $exportPath = $varDir->getAbsolutePath(self::UPLOAD_PATH);
-
-        $this->file->mkdir($exportPath, DriverInterface::WRITEABLE_DIRECTORY_MODE, true);
-
-        return $exportPath;
     }
 
     public function getExportPath(): string

@@ -15,6 +15,7 @@ use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Json\DecoderInterface;
 use Magento\Framework\Json\EncoderInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\View\Asset\NotationResolver\Variable;
 use Magento\Store\Api\StoreRepositoryInterface;
 use TemplateProvider\CmsImportExport\Api\ContentInterface;
 
@@ -149,7 +150,9 @@ class Content implements ContentInterface
     {
         $media = $this->getMediaAttachments($pageInterface->getContent());
 
-        $payload = [
+        /** @var string[] $storeIds */
+        $storeIds = $pageInterface->getStoreId();
+        return [
             'cms' => [
                 CmsPageInterface::IDENTIFIER => $pageInterface->getIdentifier(),
                 CmsPageInterface::TITLE => $pageInterface->getTitle(),
@@ -167,11 +170,9 @@ class Content implements ContentInterface
                 CmsPageInterface::CUSTOM_THEME_TO => $pageInterface->getCustomThemeTo(),
                 CmsPageInterface::IS_ACTIVE => $pageInterface->isActive(),
             ],
-            'stores' => $this->getStoreCodes([$pageInterface->getStoreId()]),
+            'stores' => $this->getStoreCodes($storeIds),
             'media' => $media,
         ];
-
-        return $payload;
     }
 
     public function getMediaAttachments(string $content): array
@@ -184,7 +185,7 @@ class Content implements ContentInterface
     }
 
     /**
-     * @param int[] $storeIds
+     * @param string[]|int[] $storeIds
      *
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -221,6 +222,8 @@ class Content implements ContentInterface
 
     public function blockToArray(CmsBlockInterface $blockInterface): array
     {
+        /** @var string[] $storeIds */
+        $storeIds = $blockInterface->getStoreId();
         $media = $this->getMediaAttachments($blockInterface->getContent());
 
         $payload = [
@@ -230,7 +233,7 @@ class Content implements ContentInterface
                 CmsBlockInterface::CONTENT => $blockInterface->getContent(),
                 CmsBlockInterface::IS_ACTIVE => $blockInterface->isActive(),
             ],
-            'stores' => $this->getStoreCodes([$blockInterface->getStoreId()]),
+            'stores' => $this->getStoreCodes($storeIds),
             'media' => $media,
         ];
 
@@ -240,7 +243,7 @@ class Content implements ContentInterface
     /**
      * @throws \Exception
      */
-    public function importFromZipFile(string $fileName, bool $rm = false): int
+    public function importFromZipFile(string $fileName): int
     {
         $zipArchive = new \ZipArchive();
         $result = $zipArchive->open($fileName);
@@ -265,10 +268,6 @@ class Content implements ContentInterface
         $cmsData = $this->decoderInterface->decode($jsonString);
 
         $count = $this->importFromArray($cmsData, $extractPath);
-
-        if ($rm) {
-            $this->file->rm($fileName);
-        }
 
         $this->file->rmdir($extractPath, true);
 
@@ -310,7 +309,7 @@ class Content implements ContentInterface
                         continue;
                     }
 
-                    if (!$this->file->mkdir(dirname($destFile),0777) ||
+                    if ($this->file->createDestinationDir(dirname($destFile)) ||
                         !$this->file->cp($sourceFile, $destFile)) {
                         throw new \Exception('Unable to save image: ' . $mediaFile);
                     }
@@ -480,7 +479,9 @@ class Content implements ContentInterface
      */
     protected function _getPageKey(CmsPageInterface $pageInterface): string
     {
-        $keys = $this->getStoreCodes([$pageInterface->getStoreId()]);
+        /** @var string[] $storeIds */
+        $storeIds = $pageInterface->getStoreId();
+        $keys = $this->getStoreCodes($storeIds);
         $keys[] = $pageInterface->getIdentifier();
 
         return implode(':', $keys);
@@ -488,7 +489,9 @@ class Content implements ContentInterface
 
     protected function _getBlockKey(CmsBlockInterface $blockInterface): string
     {
-        $keys = $this->getStoreCodes([$blockInterface->getStoreId()]);
+        /** @var string[] $storeIds */
+        $storeIds = $blockInterface->getStoreId();
+        $keys = $this->getStoreCodes($storeIds);
         $keys[] = $blockInterface->getIdentifier();
 
         return implode(':', $keys);
