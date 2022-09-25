@@ -332,7 +332,11 @@ class Content implements ContentInterface
         $pageId = 0;
 
         foreach ($collection as $item) {
-            $storesIntersect = array_intersect($item->getStoreId(), $storeIds);
+            $itemStoreIds = $item->getStoreId();
+            if ($itemStoreIds === null) {
+                $itemStoreIds = [];
+            }
+            $storesIntersect = array_intersect($itemStoreIds, $storeIds);
 
             if (count($storesIntersect)) {
                 $pageId = $item->getId();
@@ -409,7 +413,11 @@ class Content implements ContentInterface
         $blockId = 0;
 
         foreach ($collection as $item) {
-            $storesIntersect = array_intersect($item->getStoreId(), $storeIds);
+            $itemStoreIds = $item->getStoreId();
+            if ($itemStoreIds === null) {
+                $itemStoreIds = [];
+            }
+            $storesIntersect = array_intersect($itemStoreIds, $storeIds);
 
             if (count($storesIntersect)) {
                 $blockId = $item->getId();
